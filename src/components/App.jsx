@@ -1,16 +1,16 @@
-export const App = () => {
-  return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
-    </div>
-  );
-};
+import { Component } from 'react';
+import { Serchbar } from './Searchbar/Searchbar';
+
+export class App extends Component {
+  formSubmitHandler = data => {
+    console.log(data);
+  };
+
+  render() {
+    return (
+      <div>
+        <Serchbar onSubmit={this.formSubmitHandler} />
+      </div>
+    );
+  }
+}
