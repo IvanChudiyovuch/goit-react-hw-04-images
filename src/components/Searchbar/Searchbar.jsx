@@ -37,7 +37,10 @@ export class Serchbar extends Component {
       <div>
         <Header>
           <SerchForm onSubmit={this.handleSubmit}>
-            <SearchFormButton type="submit" className="button">
+            <SearchFormButton
+              type="submit"
+              img={`https://img.icons8.com/windows/72/search-more.png`}
+            >
               <ButtonLabel>Search</ButtonLabel>
             </SearchFormButton>
 
