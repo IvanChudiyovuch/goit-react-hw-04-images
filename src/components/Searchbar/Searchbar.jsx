@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { Component } from 'react';
 import {
   Header,
@@ -14,14 +15,21 @@ export class Serchbar extends Component {
 
   hendalInputChange = event => {
     this.setState({
-      inputValue: event.currentTarget.value,
+      inputValue: event.currentTarget.value.toLowerCase(),
     });
   };
 
   handleSubmit = event => {
     event.preventDefault();
 
-    this.props.onSubmit(this.state);
+    if (this.state.inputValue.trim() === '') {
+      toast.error('Error Notification !', {
+        position: toast.POSITION.TOP_LEFT,
+      });
+      return;
+    }
+
+    this.props.onSubmit(this.state.inputValue);
 
     this.reset();
   };
