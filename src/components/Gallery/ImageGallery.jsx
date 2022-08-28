@@ -10,19 +10,27 @@ export class ImageGallery extends Component {
   };
 
   state = {
+    page: 1,
     images: null,
     error: null,
     status: 'idle',
+  };
+
+  loadMore = () => {
+    this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
   componentDidUpdate(prevProps, prevState) {
     const userImageURL = 'https://pixabay.com/api/';
     const API_KEY = '28317670-7d33057fc4b50d7a50d831995';
 
-    if (prevProps.inputValue !== this.props.inputValue) {
+    if (
+      prevProps.inputValue !== this.props.inputValue ||
+      prevState.page !== this.state.page
+    ) {
       this.setState({ status: 'pending' });
       fetch(
-        `${userImageURL}?key=${API_KEY}&q=${this.props.inputValue}&image_type=photo&orientation=horizontal&safesearch=true&page=1&per_page=12`
+        `${userImageURL}?key=${API_KEY}&q=${this.props.inputValue}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.state.page}&per_page=12`
       )
         .then(respons => {
           if (respons.ok) {
@@ -55,13 +63,19 @@ export class ImageGallery extends Component {
 
     if (status === 'resolved') {
       return (
-        <List>
-          {images.hits.map(({ id, webformatURL }) => (
-            <ListItem key={id}>
-              <ImageGalleryItem webformatURL={webformatURL} />
-            </ListItem>
-          ))}
-        </List>
+        <>
+          <List>
+            {images.hits.map(({ id, webformatURL }) => (
+              <ListItem key={id}>
+                <ImageGalleryItem webformatURL={webformatURL} />
+              </ListItem>
+            ))}
+          </List>
+
+          <button onClick={this.loadMore} type="button">
+            Load more
+          </button>
+        </>
       );
     }
   }
