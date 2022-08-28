@@ -1,7 +1,14 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Loader } from 'components/Loader/Loader';
 import { ImageGalleryItem } from './ImageGalleryItem';
+import { List, ListItem } from './Gallery.styled';
 
 export class ImageGallery extends Component {
+  static propTypes = {
+    inputValue: PropTypes.string.isRequired,
+  };
+
   state = {
     images: null,
     error: null,
@@ -39,7 +46,7 @@ export class ImageGallery extends Component {
     }
 
     if (status === 'pending') {
-      return <div>Loading...</div>;
+      return <Loader />;
     }
 
     if (status === 'rejected') {
@@ -48,13 +55,13 @@ export class ImageGallery extends Component {
 
     if (status === 'resolved') {
       return (
-        <ul>
+        <List>
           {images.hits.map(({ id, webformatURL }) => (
-            <li key={id}>
+            <ListItem key={id}>
               <ImageGalleryItem webformatURL={webformatURL} />
-            </li>
+            </ListItem>
           ))}
-        </ul>
+        </List>
       );
     }
   }

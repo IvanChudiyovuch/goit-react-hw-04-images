@@ -1,7 +1,21 @@
+import { ListImage } from './Gallery.styled';
+
+import PropTypes from 'prop-types';
+
 export const ImageGalleryItem = ({ webformatURL }) => {
   return (
     <>
-      <img src={webformatURL} alt="" loading="lazy" width="250" height="250" />
+      <ListImage
+        src={webformatURL}
+        alt=""
+        loading="lazy"
+        width="240"
+        height="240"
+      />
     </>
   );
+};
+
+ImageGalleryItem.prototype = {
+  webformatURL: PropTypes.string.isRequired,
 };

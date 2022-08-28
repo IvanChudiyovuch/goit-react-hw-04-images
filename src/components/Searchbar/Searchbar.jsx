@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { Component } from 'react';
 import {
@@ -9,6 +10,10 @@ import {
 } from './Serchbar.styled';
 
 export class Serchbar extends Component {
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+  };
+
   state = {
     inputValue: '',
   };
@@ -23,9 +28,7 @@ export class Serchbar extends Component {
     event.preventDefault();
 
     if (this.state.inputValue.trim() === '') {
-      toast.error('Error Notification !', {
-        position: toast.POSITION.TOP_LEFT,
-      });
+      toast.error(`Error Image with name ${this.state.inputValue} not found!`);
       return;
     }
 
