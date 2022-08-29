@@ -61,6 +61,10 @@ export class ImageGallery extends Component {
       return <h1>{error.massage}</h1>;
     }
 
+    if (images.hits.length === 0) {
+      return <h1>The image {this.props.inputValue} not found!!!</h1>;
+    }
+
     if (status === 'resolved') {
       return (
         <>
