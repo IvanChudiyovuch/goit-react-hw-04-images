@@ -9,7 +9,7 @@ export const ModalBackdrop = styled.div`
   width: 100vw;
   height: 100vh;
   padding: ${p => p.theme.space[4]}px;
-  background: ${p => p.theme.backgroundOverlay};
+  background: ${p => p.theme.colors.backgroundOverlay};
 `;
 
 export const ModalContent = styled.div`

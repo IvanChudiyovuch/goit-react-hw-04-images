@@ -27,12 +27,6 @@ export class App extends Component {
 
   formSubmitHandler = inputValue => {
     this.setState({ inputValue });
-
-    // this.setState(prevState => {
-    //   return {
-    //     inputValue: [...prevState.inputValue, ...data.inputValue],
-    //   };
-    // });
   };
 
   render() {

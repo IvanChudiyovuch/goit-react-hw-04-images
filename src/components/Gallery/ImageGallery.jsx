@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Loader } from 'components/Loader/Loader';
 import { ImageGalleryItem } from './ImageGalleryItem';
-import { List, ListItem, Title } from './Gallery.styled';
+import { List, ListItem, Title, Button } from './Gallery.styled';
 
 export class ImageGallery extends Component {
   static propTypes = {
@@ -11,13 +11,9 @@ export class ImageGallery extends Component {
 
   state = {
     page: 1,
-    images: null,
+    images: [],
     error: null,
     status: 'idle',
-  };
-
-  loadMore = () => {
-    this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -41,10 +37,23 @@ export class ImageGallery extends Component {
             new Error(`The image ${this.props.inputValue} not faund !!!`)
           );
         })
-        .then(images => this.setState({ images, status: 'resolved' }))
+        .then(images => {
+          this.setState(prevState => {
+            return {
+              images: [...images.hits, ...prevState.images],
+              status: 'resolved',
+            };
+          });
+        })
         .catch(error => this.setState({ error, status: 'rejected' }));
     }
   }
+
+  loadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+  };
 
   render() {
     const { images, error, status } = this.state;
@@ -61,15 +70,18 @@ export class ImageGallery extends Component {
       return <Title>{error.massage}</Title>;
     }
 
-    if (images.hits.length === 0) {
+    if (images.length === 0) {
       return <Title>The image {this.props.inputValue} not found!!!</Title>;
     }
 
     if (status === 'resolved') {
       return (
         <>
+          <Button onClick={this.loadMore} type="button">
+            Load more
+          </Button>
           <List>
-            {images.hits.map(({ id, webformatURL, largeImageURL }) => (
+            {images.map(({ id, webformatURL, largeImageURL }) => (
               <ListItem key={id}>
                 <ImageGalleryItem
                   webformatURL={webformatURL}
@@ -79,10 +91,6 @@ export class ImageGallery extends Component {
               </ListItem>
             ))}
           </List>
-
-          <button onClick={this.loadMore} type="button">
-            Load more
-          </button>
         </>
       );
     }
