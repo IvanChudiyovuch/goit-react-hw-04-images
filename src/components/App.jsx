@@ -9,6 +9,7 @@ export class App extends Component {
   state = {
     inputValue: '',
     showModal: false,
+    modalImage: '',
   };
 
   togleModal = () => {
@@ -17,34 +18,36 @@ export class App extends Component {
     }));
   };
 
+  openModalHandler = largeImageURL => {
+    this.setState({
+      modalImage: largeImageURL,
+      showModal: true,
+    });
+  };
+
   formSubmitHandler = inputValue => {
     this.setState({ inputValue });
+
+    // this.setState(prevState => {
+    //   return {
+    //     inputValue: [...prevState.inputValue, ...data.inputValue],
+    //   };
+    // });
   };
 
   render() {
-    const { showModal } = this.state;
+    const { showModal, modalImage } = this.state;
     return (
       <div>
         <Serchbar onSubmit={this.formSubmitHandler} />
         <ToastContainer autoClose={3000} />
-        <ImageGallery inputValue={this.state.inputValue} />
+        <ImageGallery
+          inputValue={this.state.inputValue}
+          onClick={this.openModalHandler}
+        />
         {showModal && (
-          <Modal onClose={this.togleModal}>
-            <h1>Hello</h1>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam
-              iusto fugit eos recusandae a iure quos ducimus nobis excepturi id
-              nisi repellat, voluptatibus in nihil beatae et eum? Repellendus,
-              iure.
-            </p>
-            <button type="button" onClick={this.togleModal}>
-              Close modal
-            </button>
-          </Modal>
+          <Modal onClose={this.togleModal} modalImage={modalImage} />
         )}
-        <button type="button" onClick={this.togleModal}>
-          Open modal
-        </button>
       </div>
     );
   }

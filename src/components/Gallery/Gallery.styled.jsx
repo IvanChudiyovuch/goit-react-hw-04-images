@@ -22,3 +22,9 @@ export const ListImage = styled.img`
   width: 100%;
   height: 100%;
 `;
+
+export const Title = styled.h1`
+  text-align: center;
+  font-size: ${p => p.theme.fontSizes.m};
+  font-weight: ${p => p.theme.fontWeights.bold};
+`;

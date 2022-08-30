@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Loader } from 'components/Loader/Loader';
 import { ImageGalleryItem } from './ImageGalleryItem';
-import { List, ListItem } from './Gallery.styled';
+import { List, ListItem, Title } from './Gallery.styled';
 
 export class ImageGallery extends Component {
   static propTypes = {
@@ -50,7 +50,7 @@ export class ImageGallery extends Component {
     const { images, error, status } = this.state;
 
     if (status === 'idle') {
-      return <div>Enter name image!</div>;
+      return <Title>Enter name image!</Title>;
     }
 
     if (status === 'pending') {
@@ -58,20 +58,24 @@ export class ImageGallery extends Component {
     }
 
     if (status === 'rejected') {
-      return <h1>{error.massage}</h1>;
+      return <Title>{error.massage}</Title>;
     }
 
     if (images.hits.length === 0) {
-      return <h1>The image {this.props.inputValue} not found!!!</h1>;
+      return <Title>The image {this.props.inputValue} not found!!!</Title>;
     }
 
     if (status === 'resolved') {
       return (
         <>
           <List>
-            {images.hits.map(({ id, webformatURL }) => (
+            {images.hits.map(({ id, webformatURL, largeImageURL }) => (
               <ListItem key={id}>
-                <ImageGalleryItem webformatURL={webformatURL} />
+                <ImageGalleryItem
+                  webformatURL={webformatURL}
+                  largeImageURL={largeImageURL}
+                  onClick={this.props.onClick}
+                />
               </ListItem>
             ))}
           </List>
