@@ -1,15 +1,71 @@
 import { Component } from 'react';
-import { ToastContainer } from 'react-toastify';
+import Notiflix from 'notiflix';
 import { ImageGallery } from './Gallery/ImageGallery';
-import 'react-toastify/dist/ReactToastify.css';
+import { Loader } from 'components/Loader/Loader';
 import { Serchbar } from './Searchbar/Searchbar';
 import { Modal } from './Modal/Modal';
+import { GetImages } from './Fetch/Fetch';
+import { Button } from './Button/Button';
 
 export class App extends Component {
   state = {
-    inputValue: '',
+    query: '',
     showModal: false,
     modalImage: '',
+    page: 1,
+    images: [],
+    isLoading: false,
+    isNotLastPage: false,
+    isEmpty: false,
+  };
+
+  componentDidUpdate(_, prevState) {
+    const { query, page } = this.state;
+    if (prevState.query !== query || prevState.page !== page) {
+      this.reciveImagesData();
+    }
+
+    if (page !== 1) {
+      document.body.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+      });
+    }
+  }
+
+  async reciveImagesData() {
+    const { images, query, page } = this.state;
+
+    this.setState({ isLoading: true });
+    const { imagesData, totalHits } = await GetImages(query, page);
+
+    if (totalHits) {
+      this.setState(prevState => ({
+        images: [...prevState.images, ...imagesData],
+      }));
+    }
+
+    this.setState({
+      isNotLastPage: images.length + imagesData.length < totalHits,
+      isLoading: false,
+      isEmpty: !totalHits,
+    });
+  }
+
+  formSubmitHandler = query => {
+    if (query) {
+      this.setState({
+        images: [],
+        page: 1,
+        query,
+      });
+    }
+  };
+
+  loadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
   };
 
   togleModal = () => {
@@ -25,20 +81,29 @@ export class App extends Component {
     });
   };
 
-  formSubmitHandler = inputValue => {
-    this.setState({ inputValue });
-  };
-
   render() {
-    const { showModal, modalImage } = this.state;
+    const {
+      query,
+      images,
+      showModal,
+      modalImage,
+      isLoading,
+      isNotLastPage,
+      isEmpty,
+    } = this.state;
     return (
       <div>
         <Serchbar onSubmit={this.formSubmitHandler} />
-        <ToastContainer autoClose={3000} />
-        <ImageGallery
-          inputValue={this.state.inputValue}
-          onClick={this.openModalHandler}
-        />
+        {images.length > 0 && (
+          <ImageGallery onClick={this.openModalHandler} images={images} />
+        )}
+        {isLoading ? (
+          <Loader />
+        ) : (
+          isNotLastPage && <Button onClick={this.loadMore}>Load more</Button>
+        )}
+        {isEmpty &&
+          Notiflix.Notify.warning(`Error Image with name ${query} not found!`)}
         {showModal && (
           <Modal onClose={this.togleModal} modalImage={modalImage} />
         )}

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
+import Notiflix from 'notiflix';
+// import { toast } from 'react-toastify';
 import { Component } from 'react';
 import {
   Header,
@@ -28,8 +29,9 @@ export class Serchbar extends Component {
     event.preventDefault();
 
     if (this.state.inputValue.trim() === '') {
-      toast.error(`Error Image with name ${this.state.inputValue} not found!`);
-      return;
+      return Notiflix.Notify.warning(
+        `Error Image with name ${this.state.inputValue} not found!`
+      );
     }
 
     this.props.onSubmit(this.state.inputValue);
