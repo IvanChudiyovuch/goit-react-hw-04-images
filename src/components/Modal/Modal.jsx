@@ -11,7 +11,6 @@ export const Modal = ({ modalImage, onClose }) => {
   });
 
   const hendleKeydown = event => {
-    console.log(event.code);
     if (event.code === 'Escape') {
       onClose();
     }
