@@ -7,14 +7,16 @@ const modalRoot = document.querySelector('#modal-root');
 
 export const Modal = ({ modalImage, onClose }) => {
   useEffect(() => {
+    const hendleKeydown = event => {
+      if (event.code === 'Escape') {
+        onClose();
+      }
+    };
     window.addEventListener('keydown', hendleKeydown);
-  });
-
-  const hendleKeydown = event => {
-    if (event.code === 'Escape') {
-      onClose();
-    }
-  };
+    return () => {
+      window.removeEventListener('keydown', hendleKeydown);
+    };
+  }, [onClose]);
 
   const hendleBackdropClick = event => {
     if (event.currentTarget === event.target) {
