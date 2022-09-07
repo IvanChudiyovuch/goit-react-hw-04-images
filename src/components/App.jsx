@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { animateScroll } from 'react-scroll';
 import Notiflix from 'notiflix';
 import { ImageGallery } from './Gallery/ImageGallery';
 import { Loader } from 'components/Loader/Loader';
@@ -22,28 +23,23 @@ export const App = () => {
       return;
     }
 
-    reciveImagesData(query, page);
+    (async () => {
+      setIsLoading(true);
+      const { imagesData, totalHits, lastPage } = await GetImages(query, page);
 
-    if (page !== 1) {
-      document.body.scrollIntoView({
-        behavior: 'smooth',
-        block: 'end',
-      });
-    }
-  });
+      if (totalHits) {
+        setImages(prevState => [...prevState, ...imagesData]);
+      }
 
-  async function reciveImagesData() {
-    setIsLoading(true);
-    const { imagesData, totalHits } = await GetImages(query, page);
+      setIsNotLastPage(!lastPage);
+      setIsLoading(false);
+      setIsEmpty(!totalHits);
 
-    if (totalHits) {
-      setImages(prevState => [...prevState, ...imagesData]);
-    }
-
-    setIsNotLastPage(images.length + imagesData.length < totalHits);
-    setIsLoading(false);
-    setIsEmpty(!totalHits);
-  }
+      if (page !== 1) {
+        animateScroll.scrollToBottom();
+      }
+    })();
+  }, [page, query]);
 
   const formSubmitHandler = query => {
     if (query) {
