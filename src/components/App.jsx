@@ -30,7 +30,7 @@ export const App = () => {
         block: 'end',
       });
     }
-  }, [page, query]);
+  });
 
   async function reciveImagesData() {
     setIsLoading(true);
